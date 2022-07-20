@@ -60,7 +60,7 @@ func BorrowBook(c *fiber.Ctx) error {
 		rdb.Set(CTX, bookId, "borrowed", 0)
 
 		borrow := model.Borrow{
-			Date:     time.Now().String(),
+			Date:     time.Now().Format("02-01-2006 15:04:05"),
 			BookID:   input.BookID,
 			MemberID: *member.ID,
 		}
@@ -77,8 +77,8 @@ func BorrowBook(c *fiber.Ctx) error {
 func GetBorrowList(c *fiber.Ctx) error {
 	db := config.DB
 
-	borrowedBooks := []model.Book{}
-	db.Model(&model.Book{}).Where("state = ?", "borrowed").Find(&borrowedBooks)
+	borrowedBooks := []model.Borrow{}
+	db.Model(&model.Borrow{}).Scan(&borrowedBooks)
 
 	return c.Status(fiber.StatusOK).JSON(borrowedBooks)
 }

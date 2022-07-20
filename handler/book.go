@@ -59,7 +59,7 @@ func CreateBook(c *fiber.Ctx) error {
 	// Add book
 	newBook := model.Book{}
 	newBook.BookID = *bookDetail.ID
-	newBook.Date = time.Now().Format("02-01-2006")
+	newBook.Date = time.Now().Format("02-01-2006 15:04:05")
 	newBook.State = "available"
 	db.Model(&model.Book{}).Create(&newBook)
 
