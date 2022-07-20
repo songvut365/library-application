@@ -31,7 +31,7 @@ func GetBookById(c *fiber.Ctx) error {
 	bookId := c.Params("book_id")
 
 	book := BookResult{}
-	err := db.Model(&model.Book{}).Select("books.id, book_details.name, books.date, books.state").Joins("left join book_details on book_details.id = books.book_id").Where("books.id = ?", bookId).Scan(&book).Error
+	err := db.Model(&model.Book{}).Select("books.id, book_details.name, books.date, books.state").Joins("left join book_details on book_details.id = books.book_id").Where("books.id = ?", bookId).First(&book).Error
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Book not found",
