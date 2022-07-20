@@ -11,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-var ctx = context.Background()
+var CTX = context.Background()
 
 func BorrowBook(c *fiber.Ctx) error {
 	db := config.DB
@@ -31,7 +31,7 @@ func BorrowBook(c *fiber.Ctx) error {
 
 	// Get book state from Redis
 	bookId := fmt.Sprintf("%v", input.BookID)
-	state, err := rdb.Get(ctx, bookId).Result()
+	state, err := rdb.Get(CTX, bookId).Result()
 
 	if err == redis.Nil {
 		book := model.Book{}
@@ -41,7 +41,7 @@ func BorrowBook(c *fiber.Ctx) error {
 				"message": "Book not found",
 			})
 		}
-		rdb.Set(ctx, bookId, book.State, 0)
+		rdb.Set(CTX, bookId, book.State, 0)
 		state = book.State
 	}
 
@@ -57,7 +57,7 @@ func BorrowBook(c *fiber.Ctx) error {
 		message = "Book has been borrowed"
 	case "available":
 		db.Model(&model.Book{}).Where("id = ?", input.BookID).Update("state", "borrowed")
-		rdb.Set(ctx, bookId, "borrowed", 0)
+		rdb.Set(CTX, bookId, "borrowed", 0)
 
 		borrow := model.Borrow{
 			Date:     time.Now().String(),
