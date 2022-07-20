@@ -5,6 +5,7 @@ import (
 	"library-app/model"
 	"time"
 
+	"github.com/go-redis/redis/v9"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -58,21 +59,23 @@ func CreateBook(c *fiber.Ctx) error {
 	// Add book
 	newBook := model.Book{}
 	newBook.BookID = *bookDetail.ID
-	newBook.Date = time.Now().String()
+	newBook.Date = time.Now().Format("02-01-2006")
 	newBook.State = "available"
 	db.Model(&model.Book{}).Create(&newBook)
 
 	// Update book amount
-	bookDetail.Amount++
+	bookDetail.Amount = bookDetail.Amount + 1
 	db.Updates(&bookDetail)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Create book successfully",
+		"book":    newBook,
 	})
 }
 
 func UpdateBook(c *fiber.Ctx) error {
 	db := config.DB
+	rdb := config.RDB
 
 	updateBook := model.UpdateBook{}
 	c.BodyParser(&updateBook)
@@ -91,13 +94,21 @@ func UpdateBook(c *fiber.Ctx) error {
 	book.State = updateBook.State
 	db.Model(&model.Book{}).Where("id = ?", bookId).Updates(&book)
 
+	// Update state on Redis
+	_, err = rdb.Get(CTX, bookId).Result()
+	if err != redis.Nil {
+		rdb.Set(CTX, bookId, updateBook.State, 0)
+	}
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Update book successfully",
+		"book":    book,
 	})
 }
 
 func DeleteBook(c *fiber.Ctx) error {
 	db := config.DB
+	rdb := config.RDB
 
 	updateBook := model.UpdateBook{}
 	c.BodyParser(&updateBook)
@@ -127,7 +138,11 @@ func DeleteBook(c *fiber.Ctx) error {
 		db.Model(&model.BookDetail{}).Where("id = ?", book.BookID).Updates(&bookDetail)
 	}
 
+	// Delete from Redis
+	rdb.Del(CTX, bookId)
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Delete book successfully",
+		"book":    book,
 	})
 }
