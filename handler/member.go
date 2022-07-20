@@ -11,7 +11,7 @@ func GetMembers(c *fiber.Ctx) error {
 	db := config.DB
 
 	members := []model.Member{}
-	db.Model(&model.Member{}).Find(&members)
+	db.Model(&model.Member{}).Order("id asc").Find(&members)
 
 	return c.Status(fiber.StatusOK).JSON(members)
 }
