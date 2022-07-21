@@ -31,6 +31,7 @@ type Member struct {
 type Borrow struct {
 	ID       *int   `json:"id"`
 	BookID   int    `json:"book_id"`
+	BookName string `json:"book_name"`
 	MemberID int    `json:"member_id"`
 	Date     string `json:"date"`
 }

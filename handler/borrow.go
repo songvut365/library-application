@@ -78,7 +78,11 @@ func GetBorrowList(c *fiber.Ctx) error {
 	db := config.DB
 
 	borrowedBooks := []model.Borrow{}
-	db.Model(&model.Borrow{}).Scan(&borrowedBooks)
+	db.Model(&model.Borrow{}).
+		Select("borrows.id, borrows.book_id, book_details.name as book_name, borrows.member_id, borrows.date").
+		Joins("join books on books.id = borrows.book_id").
+		Joins("join book_details on book_details.id = books.book_id").
+		Scan(&borrowedBooks)
 
 	return c.Status(fiber.StatusOK).JSON(borrowedBooks)
 }
