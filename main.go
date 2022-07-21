@@ -42,6 +42,10 @@ func main() {
 	borrows.Get("/", handler.GetBorrowList)
 	borrows.Post("/", handler.BorrowBook)
 
+	states := app.Group("/states")
+	states.Get("/", handler.GetStates)
+	states.Get("/:book_id", handler.GetStateByKey)
+
 	// Run
 	log.Fatal(app.Listen(":3000"))
 }
