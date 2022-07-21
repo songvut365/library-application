@@ -23,6 +23,7 @@ func main() {
 	bookDetail := app.Group("/book_detail")
 	bookDetail.Get("/", handler.GetAllBookDetail)
 	bookDetail.Get("/:book_detail_id", handler.GetBookDetailById)
+	bookDetail.Put("/:book_detail_id", handler.UpdateBookDetail)
 
 	books := app.Group("/books")
 	books.Get("/", handler.GetBooks)

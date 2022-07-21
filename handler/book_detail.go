@@ -31,3 +31,25 @@ func GetBookDetailById(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(bookDetail)
 }
+
+func UpdateBookDetail(c *fiber.Ctx) error {
+	db := config.DB
+
+	bookDetailId := c.Params("book_detail_id")
+
+	updateBookDetail := model.UpdateBookDetail{}
+	c.BodyParser(&updateBookDetail)
+
+	bookDetail := model.BookDetail{}
+	err := db.Model(&model.BookDetail{}).Where("id = ?", bookDetailId).Update("name", updateBookDetail.Name).First(&bookDetail).Error
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Book detail not found",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message":     "Update Book Detail Success",
+		"book_detail": bookDetail,
+	})
+}
