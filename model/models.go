@@ -14,6 +14,10 @@ type BookDetail struct {
 	Amount int    `json:"amount" gorm:"default:0"`
 }
 
+type UpdateBookDetail struct {
+	Name string `json:"name"`
+}
+
 type Book struct {
 	ID     *int   `json:"id"`
 	BookID int    `json:"book_id"`
@@ -29,6 +33,13 @@ type Member struct {
 }
 
 type Borrow struct {
+	ID       *int   `json:"id"`
+	BookID   int    `json:"book_id"`
+	MemberID int    `json:"member_id"`
+	Date     string `json:"date"`
+}
+
+type BorrowResult struct {
 	ID       *int   `json:"id"`
 	BookID   int    `json:"book_id"`
 	BookName string `json:"book_name"`
