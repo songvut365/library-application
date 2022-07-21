@@ -103,9 +103,9 @@ func UpdateBook(c *fiber.Ctx) error {
 	db.Model(&model.Book{}).Where("id = ?", bookId).Updates(&book)
 
 	// Update state on Redis
-	_, err = rdb.Get(CTX, bookId).Result()
+	_, err = rdb.Get(CTX, "book:"+bookId).Result()
 	if err != redis.Nil {
-		rdb.Set(CTX, bookId, updateBook.State, 0)
+		rdb.Set(CTX, "book:"+bookId, updateBook.State, 0)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -147,7 +147,7 @@ func DeleteBook(c *fiber.Ctx) error {
 	}
 
 	// Delete from Redis
-	rdb.Del(CTX, bookId)
+	rdb.Del(CTX, "book:"+bookId)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Delete book successfully",
