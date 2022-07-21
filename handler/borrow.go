@@ -77,7 +77,7 @@ func BorrowBook(c *fiber.Ctx) error {
 func GetBorrowList(c *fiber.Ctx) error {
 	db := config.DB
 
-	borrowedBooks := []model.Borrow{}
+	borrowedBooks := []model.BorrowResult{}
 	db.Model(&model.Borrow{}).
 		Select("borrows.id, borrows.book_id, book_details.name as book_name, borrows.member_id, borrows.date").
 		Joins("join books on books.id = borrows.book_id").
