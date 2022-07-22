@@ -4,7 +4,9 @@
 
 ```
 $ docker run --name my-postgres -p 5432:5432 -e POSTGRES_PASSWORD=1234 -e POSTGRES_DB=library -d postgres
-$ docker run --name my-redis -d redis
+
+$ docker run --name my-redis -p 6379:6379 -d redis
+
 $ go run main.go
 ```
 
