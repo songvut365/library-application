@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Application</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>Library Application</h1>
+    <a href="member_list.html">Member List</a> | 
+    <a href="book_detail_list.html">Book Detail List</a> | 
+    <a href="borrow_list.html">Borrow List</a>
+
+    <h2>Add Book</h2>
+    <label for="newBook">New Book Name</label>
+    <input type="text" id="newBook">
+    <button onclick="AddBook()">Add Book</button>
+
+    <hr>
+
+    <h2>Book Lists</h2>
+    <table id="bookLists">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Create Date</th>
+            <th>State</th>
+            <th></th>
+        </tr>
+    </table>
+    <br>
+
+    <hr>
+
+    <h2>Borrow Book (Member Only)</h2>
+    <label for="bookId">Book ID</label>
+    <input type="text" id="bookId">
+    <br>
+        
+    <label for="nationalId">National ID</label>
+    <input type="text" id="nationalId">
+    <br>
+
+    <button onclick="Borrow()">Borrow</button>
+
+    <script>
+        fetch("http://localhost:3000/books/", {
+            method: 'GET',
+            redirect: 'follow',
+        })
+        .then(response => response.text())
+        .then(result => {
+            let booksData = JSON.parse(result)
+
+            let books = document.getElementById('bookLists')
+            booksData.forEach(bookData => {
+                const book = document.createElement('tr')
+                
+                const id = document.createElement("td")
+                const bookId = document.createTextNode(bookData.id)
+                id.append(bookId)
+                book.append(id)
+
+                const name = document.createElement("td")
+                const bookName = document.createTextNode(bookData.name)
+                name.append(bookName)
+                book.append(name)
+
+                const date = document.createElement("td")
+                const bookDate = document.createTextNode(bookData.date)
+                date.append(bookDate)
+                book.append(date)
+
+                const state = document.createElement("td")
+                const bookState = document.createTextNode(bookData.state)
+                state.append(bookState)
+                book.append(state)
+
+                const detail = document.createElement("td")
+                const bookDetail = document.createElement("a")
+                const url = "book.html?id=" + bookData.id
+                bookDetail.setAttribute("href", url)
+                bookDetail.innerText = "edit"
+                detail.append(bookDetail)
+                book.append(detail)
+
+                books.appendChild(book)
+            });
+        })
+
+        function AddBook() {
+            let newBookData = {
+                name: document.getElementById("newBook").value
+            }
+
+            fetch("http://localhost:3000/books/", {
+                method: 'POST',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newBookData)
+            })
+            .then(response => response.text())
+            .then(result => {
+                let r = JSON.parse(result)
+                alert(r.message)
+                location.reload()
+            })
+        }
+
+        function Borrow() {
+            let borrowData = {
+                book_id: parseInt(document.getElementById("bookId").value),
+                national_id: document.getElementById("nationalId").value
+            }
+
+            fetch("http://localhost:3000/borrows/", {
+                method: 'POST',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(borrowData)
+            })
+            .then(response => response.text())
+            .then(result => {
+                let r = JSON.parse(result)
+                alert(r.message)
+                location.reload()
+            })
+        }
+    </script>
+</body>
+</html>
