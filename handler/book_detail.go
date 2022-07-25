@@ -11,7 +11,7 @@ func GetAllBookDetail(c *fiber.Ctx) error {
 	db := config.DB
 
 	bookDetails := []model.BookDetail{}
-	db.Model(&model.BookDetail{}).Order("id asc").Find(&bookDetails)
+	db.Order("id asc").Find(&bookDetails)
 
 	return c.Status(fiber.StatusOK).JSON(bookDetails)
 }
@@ -22,7 +22,7 @@ func GetBookDetailById(c *fiber.Ctx) error {
 	bookDetailId := c.Params("book_detail_id")
 
 	bookDetail := model.BookDetail{}
-	err := db.Model(&model.BookDetail{}).Where("id = ?", bookDetailId).First(&bookDetail).Error
+	err := db.Where("id = ?", bookDetailId).First(&bookDetail).Error
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Book detail not found",
