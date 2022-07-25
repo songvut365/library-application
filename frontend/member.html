@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member</title>
+    <style>
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <a href="member_list.html">back</a>
+    <h1 id="memberHeader"></h1>
+    <div id="detail">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" />
+        <br>
+
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" />
+        <br>
+
+        <label for="nationalId">National ID</label>
+        <input type="text" id="nationalId" />
+        <br>
+
+        <button onclick="UpdateMember()">Update</button>
+        <button onclick="DeleteMember()">Delete</button>
+    </div>
+
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString)
+        const id = urlParams.get("id");
+
+        fetch("http://localhost:3000/members/"+id, {
+            method: 'GET',
+            redirect: 'follow',
+        })
+        .then(response => response.text())
+        .then(result => {
+            let memberData = JSON.parse(result)
+
+            let header = document.getElementById("memberHeader")
+            header.innerText = "Member ID: " + memberData.id 
+
+            let firstName = document.getElementById("firstName")
+            firstName.value = memberData.first_name
+
+            let lastName = document.getElementById("lastName")
+            lastName.value = memberData.last_name
+
+            let nationalId = document.getElementById("nationalId")
+            nationalId.value = memberData.national_id
+        })
+
+        function UpdateMember() {
+            let updateMemberData = {
+                first_name: document.getElementById("firstName").value,
+                last_name: document.getElementById("lastName").value,
+                national_id: document.getElementById("nationalId").value
+            }
+
+            fetch("http://localhost:3000/members/"+id, {
+                method: 'PUT',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateMemberData)
+            })
+            .then(response => response.text())
+            .then(result => {
+                let r = JSON.parse(result)
+                alert(r.message)
+                location.reload()
+            })
+        }
+
+        function DeleteMember() {
+            fetch("http://localhost:3000/members/"+id, {
+                method: 'DELETE',
+                redirect: 'follow'
+            })
+            .then(response => response.text())
+            .then(result => {
+                let r = JSON.parse(result)
+                alert(r.message)
+                location.href = "member_list.html"
+            })
+        }
+    </script>
+</body>
+</html>

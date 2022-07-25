@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Detail</title>
+</head>
+<body>
+    <a href="book_detail_list.html">back</a>
+
+    <h1 id="bookDetailHeader"></h1>
+
+    <label for="bookDetailName">Book Detail Name</label>
+    <input type="text" id="bookDetailName">
+    <br>
+
+    <label for="bookDetailAmount">Amount: </label>
+    <span id="bookDetailAmount"></span>
+    <br>
+
+    <button onclick="UpdateBookDetail()">Update</button>
+
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString)
+        const id = urlParams.get("id");
+
+        fetch("http://localhost:3000/book_detail/"+id, {
+            method: 'GET',
+            redirect: 'follow',
+        })
+        .then(response => response.text())
+        .then(result => {
+            let bookDetailData = JSON.parse(result)
+
+            let header = document.getElementById("bookDetailHeader")
+            header.innerText = "Book Detail ID: " + bookDetailData.id 
+
+            let bookDetailName = document.getElementById("bookDetailName")
+            bookDetailName.value = bookDetailData.name
+
+            let bookDetailAmount = document.getElementById("bookDetailAmount")
+            bookDetailAmount.innerText = bookDetailData.amount
+        })
+
+        function UpdateBookDetail() {
+            let updateBookDetailData = {
+                name: document.getElementById("bookDetailName").value
+            }
+
+            fetch("http://localhost:3000/book_detail/"+id, {
+                method: 'PUT',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateBookDetailData)
+            })
+            .then(response => response.text())
+            .then(result => {
+                let r = JSON.parse(result)
+                alert(r.message)
+                location.reload()
+            })
+        }
+    </script>
+</body>
+</html>

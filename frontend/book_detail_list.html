@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Detail List</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html">Home</a>
+
+    <h1>Book Detail List</h1>
+
+    <table id="bookDetails">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Amount</th>
+            <th></th>
+        </tr>
+    </table>
+
+    <script>
+        fetch("http://localhost:3000/book_detail", {
+            method: "GET",
+            redirect: "follow"
+        })
+        .then(response => response.text())
+        .then(result => {
+            let bookDetailData = JSON.parse(result)
+
+            let bookDetails = document.getElementById("bookDetails")
+
+            bookDetailData.forEach(bookDetail => {
+                const detail = document.createElement("tr")
+                detail.setAttribute("id", bookDetail.id)
+
+                const id = document.createElement("td")
+                const bookDetailId = document.createTextNode(bookDetail.id)
+                id.append(bookDetailId)
+                detail.append(id)
+
+                const name = document.createElement("td")
+                const bookDetailName = document.createTextNode(bookDetail.name)
+                name.append(bookDetailName)
+                detail.append(name)
+
+                const amount = document.createElement("td")
+                const bookDetailAmount = document.createTextNode(bookDetail.amount)
+                amount.append(bookDetailAmount)
+                detail.append(amount)
+
+                const edit = document.createElement("td")
+                bookDetailEdit = document.createElement("a")
+                const url = "book_detail.html?id="+bookDetail.id
+                bookDetailEdit.setAttribute("href", url)
+                bookDetailEdit.innerText = "edit"
+                edit.append(bookDetailEdit)
+                detail.append(edit)
+
+                bookDetails.appendChild(detail)
+            })
+        })
+
+    </script>
+</body>
+</html>

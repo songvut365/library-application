@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book</title>
+    <style>
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html">back</a>
+    <h1 id="bookHeader"></h1>
+
+    <div id="detail">
+        <label for="bookName">Book Name:</label>
+        <span id="bookName"></span>
+        <br>
+
+        <label for="bookDate">Create Date:</label>
+        <span id="bookDate"></span>
+        <br>
+
+        <label for="bookState">State:</label>
+        <input id="bookState" />
+        <br>
+
+        <button onclick="UpdateBook()">Update</button>
+        <button onclick="DeleteBook()">Delete</button>
+    </div>
+
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString)
+        const id = urlParams.get("id");
+
+        fetch("http://localhost:3000/books/"+id, {
+            method: 'GET',
+            redirect: 'follow',
+        })
+        .then(response => response.text())
+        .then(result => {
+            let bookData = JSON.parse(result)
+
+            let header = document.getElementById("bookHeader")
+            header.innerText = "Book ID: " + bookData.id
+
+            let bookName = document.getElementById("bookName")
+            bookName.innerText = bookData.name
+
+            let bookDate = document.getElementById("bookDate")
+            bookDate.innerText = bookData.date
+
+            let bookState = document.getElementById("bookState")
+            bookState.value = bookData.state
+        })
+
+        function UpdateBook() {
+            let updateBookData = {
+                state: document.getElementById("bookState").value
+            }
+
+            fetch("http://localhost:3000/books/"+id, {
+                method: 'PUT',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateBookData)
+            })
+            .then(response => response.text())
+            .then(result => {
+                let r = JSON.parse(result)
+                alert(r.message)
+                location.reload()
+            })
+        }
+
+        function DeleteBook() {
+            fetch("http://localhost:3000/books/"+id, {
+                method: 'DELETE',
+                redirect: 'follow'
+            })
+            .then(response => response.text())
+            .then(result => {
+                let r = JSON.parse(result)
+                alert(r.message)
+                location.href = "index.html"
+            })
+        }
+    </script>
+</body>
+</html>

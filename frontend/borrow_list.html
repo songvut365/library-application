@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borrow List</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html">back</a>
+    <h1>Borrow List</h1>
+    <table id="borrowLists">
+        <tr>
+            <th>ID</th>
+            <th>Book ID</th>
+            <th>Book Name</th>
+            <th>Member ID</th>
+            <th>Borrow Date</th>
+        </tr>
+    </table>
+
+    <script>
+        fetch("http://localhost:3000/borrows/", {
+            method: "GET",
+            redirect: "follow"
+        })
+        .then(response => response.text())
+        .then(result => {
+            let borrowsData = JSON.parse(result)
+
+            let borrows = document.getElementById("borrowLists")
+            borrowsData.forEach(borrowData => {
+                const borrow = document.createElement("tr")
+                borrow.setAttribute("id", borrowData.id)
+
+                const id = document.createElement("td")
+                const borrowId = document.createTextNode(borrowData.id)
+                id.append(borrowId)
+                borrow.append(id)
+
+                const bookId = document.createElement("td")
+                const borrowBookId = document.createTextNode(borrowData.book_id)
+                bookId.append(borrowBookId)
+                borrow.append(bookId)
+
+                const bookName = document.createElement("td")
+                const borrowBookName = document.createTextNode(borrowData.book_name)
+                bookName.append(borrowBookName)
+                borrow.append(bookName)
+
+                const memberId = document.createElement("td")
+                const borrowMemberId = document.createTextNode(borrowData.member_id)
+                memberId.append(borrowMemberId)
+                borrow.append(memberId)
+
+                const date = document.createElement("td")
+                const borrowDate = document.createTextNode(borrowData.date)
+                date.append(borrowDate)
+                borrow.append(date)
+
+                borrows.appendChild(borrow)
+            })
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Application</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html">Home</a>
+
+    <h1>Member Lists</h1>
+    <table id="memberLists">
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>National ID</th>
+            <th></th>
+        </tr>
+    </table>
+
+    <hr>
+
+    <h2>Add Member</h2>
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" />
+    <br>
+
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" />
+    <br>
+
+    <label for="nationalId">National ID</label>
+    <input type="text" id="nationalId" />
+    <br>
+    <button onclick="AddMember()">Add</button>
+
+    <script>
+        function FetchMember() {
+            fetch("http://localhost:3000/members/", {
+                method: 'GET',
+                redirect: 'follow',
+            })
+            .then(response => response.text())
+            .then(result => {
+                let membersData = JSON.parse(result)
+
+                let members = document.getElementById('memberLists')
+                membersData.forEach(memberData => {
+                    const member = document.createElement('tr')
+                    member.setAttribute("id", memberData.id)
+                    
+                    const id = document.createElement("td")
+                    const bookId = document.createTextNode(memberData.id)
+                    id.append(bookId)
+                    member.append(id)
+
+                    const firstName = document.createElement("td")
+                    const memberFirstName = document.createTextNode(memberData.first_name)
+                    firstName.append(memberFirstName)
+                    member.append(firstName)
+
+                    const lastName = document.createElement("td")
+                    const memberLastName = document.createTextNode(memberData.last_name)
+                    lastName.append(memberLastName)
+                    member.append(lastName)
+
+                    const nationalId = document.createElement("td")
+                    const memberNationalId = document.createTextNode(memberData.national_id)
+                    nationalId.append(memberNationalId)
+                    member.append(nationalId)
+
+                    // Edit
+                    const detail = document.createElement("td")
+                    const memberDetail = document.createElement("a")
+                    const url = "member.html?id="+memberData.id
+                    memberDetail.setAttribute("href", url)
+                    memberDetail.innerText = "edit"
+                    detail.append(memberDetail)
+                    member.append(detail)
+
+                    members.appendChild(member)
+                });
+            })
+        }
+
+        function AddMember() {
+            let memberData = {
+                first_name: document.getElementById("firstName").value,
+                last_name: document.getElementById("lastName").value,
+                national_id: document.getElementById("nationalId").value
+            }
+
+            fetch("http://localhost:3000/members/", {
+                method: 'POST',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(memberData)
+            })
+            .then(response => response.text())
+            .then(result => {
+                let r = JSON.parse(result)
+                alert(r.message)
+                location.reload()
+            })
+        }
+
+        FetchMember();
+    </script>
+</body>
+</html>
