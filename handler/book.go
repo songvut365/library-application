@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"library-app/config"
 	"library-app/model"
 	"time"
@@ -65,10 +66,11 @@ func CreateBook(c *fiber.Ctx) error {
 	}
 
 	// Add book
-	newBook := model.Book{}
-	newBook.BookID = *bookDetail.ID
-	newBook.Date = time.Now().Format("02-01-2006 15:04:05")
-	newBook.State = "available"
+	newBook := model.Book{
+		BookID: *bookDetail.ID,
+		Date:   time.Now().Format("02-01-2006 15:04:05"),
+		State:  "available",
+	}
 	db.Model(&model.Book{}).Create(&newBook)
 
 	// Update book amount
@@ -103,9 +105,9 @@ func UpdateBook(c *fiber.Ctx) error {
 	db.Model(&model.Book{}).Where("id = ?", bookId).Updates(&book)
 
 	// Update state on Redis
-	_, err = rdb.Get(CTX, "book:"+bookId).Result()
+	_, err = rdb.Get(context.Background(), "book:"+bookId).Result()
 	if err != redis.Nil {
-		rdb.Set(CTX, "book:"+bookId, updateBook.State, 0)
+		rdb.Set(context.Background(), "book:"+bookId, updateBook.State, 0)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -147,7 +149,7 @@ func DeleteBook(c *fiber.Ctx) error {
 	}
 
 	// Delete from Redis
-	rdb.Del(CTX, "book:"+bookId)
+	rdb.Del(context.Background(), "book:"+bookId)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Delete book successfully",

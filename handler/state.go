@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"library-app/config"
 
 	"github.com/go-redis/redis/v9"
@@ -12,9 +13,9 @@ func GetStates(c *fiber.Ctx) error {
 
 	states := map[string]string{}
 
-	iter := rdb.Scan(CTX, 0, "book:*", 0).Iterator()
-	for iter.Next(CTX) {
-		state, _ := rdb.Get(CTX, iter.Val()).Result()
+	iter := rdb.Scan(context.Background(), 0, "book:*", 0).Iterator()
+	for iter.Next(context.Background()) {
+		state, _ := rdb.Get(context.Background(), iter.Val()).Result()
 		states[iter.Val()] = state
 	}
 
@@ -26,7 +27,7 @@ func GetStateByKey(c *fiber.Ctx) error {
 
 	bookId := c.Params("book_id")
 
-	state, err := rdb.Get(CTX, "book:"+bookId).Result()
+	state, err := rdb.Get(context.Background(), "book:"+bookId).Result()
 	if err == redis.Nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "State not found",
