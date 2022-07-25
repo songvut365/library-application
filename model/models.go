@@ -1,5 +1,6 @@
 package model
 
+// Book
 type NewBook struct {
 	Name string `json:"name"`
 }
@@ -8,6 +9,14 @@ type UpdateBook struct {
 	State string `json:"state"`
 }
 
+type Book struct {
+	ID     *int   `json:"id"`
+	BookID int    `json:"book_id"`
+	Date   string `json:"date"`
+	State  string `json:"state"`
+}
+
+// Book Detail
 type BookDetail struct {
 	ID     *int   `json:"id"`
 	Name   string `json:"name"`
@@ -18,13 +27,7 @@ type UpdateBookDetail struct {
 	Name string `json:"name"`
 }
 
-type Book struct {
-	ID     *int   `json:"id"`
-	BookID int    `json:"book_id"`
-	Date   string `json:"date"`
-	State  string `json:"state"`
-}
-
+// Member
 type Member struct {
 	ID         *int   `json:"id"`
 	FirstName  string `json:"first_name"`
@@ -32,6 +35,7 @@ type Member struct {
 	NationalID string `json:"national_id"`
 }
 
+// Borrow
 type Borrow struct {
 	ID       *int   `json:"id"`
 	BookID   int    `json:"book_id"`
