@@ -10,17 +10,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type BookResult struct {
-	ID    *int   `json:"id"`
-	Name  string `json:"name"`
-	Date  string `json:"date"`
-	State string `json:"state"`
-}
-
 func GetBooks(c *fiber.Ctx) error {
 	db := config.DB
 
-	books := []BookResult{}
+	books := []model.BookResponse{}
 	db.Model(&model.Book{}).
 		Order("id asc").
 		Select("books.id, book_details.name, books.date, books.state").
@@ -35,7 +28,7 @@ func GetBookById(c *fiber.Ctx) error {
 
 	bookId := c.Params("book_id")
 
-	book := BookResult{}
+	book := model.BookResponse{}
 	err := db.Model(&model.Book{}).
 		Select("books.id, book_details.name, books.date, books.state").
 		Joins("left join book_details on book_details.id = books.book_id").
