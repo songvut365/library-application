@@ -1,5 +1,9 @@
 # Library Application
 
+## Architecture
+
+![diagram](./doc/diagram.png)
+
 ## How to run
 
 1. Run PostgreSQL
