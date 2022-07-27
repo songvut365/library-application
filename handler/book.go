@@ -6,7 +6,6 @@ import (
 	"library-app/model"
 	"time"
 
-	"github.com/go-redis/redis/v9"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -98,10 +97,7 @@ func UpdateBook(c *fiber.Ctx) error {
 	db.Model(&model.Book{}).Where("id = ?", bookId).Updates(&book)
 
 	// Update state on Redis
-	_, err = rdb.Get(context.Background(), "book:"+bookId).Result()
-	if err != redis.Nil {
-		rdb.Set(context.Background(), "book:"+bookId, updateBook.State, 0)
-	}
+	rdb.Set(context.Background(), "book:"+bookId, updateBook.State, 0)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Update book successfully",
