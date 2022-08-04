@@ -1,4 +1,4 @@
-package config
+package database
 
 import "github.com/go-redis/redis/v9"
 

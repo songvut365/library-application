@@ -1,14 +1,14 @@
 package handler
 
 import (
-	"library-app/config"
+	"library-app/database"
 	"library-app/model"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetAllBookDetail(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	bookDetails := []model.BookDetail{}
 	db.Order("id asc").Find(&bookDetails)
@@ -17,7 +17,7 @@ func GetAllBookDetail(c *fiber.Ctx) error {
 }
 
 func GetBookDetailById(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	bookDetailId := c.Params("book_detail_id")
 
@@ -33,7 +33,7 @@ func GetBookDetailById(c *fiber.Ctx) error {
 }
 
 func UpdateBookDetail(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	bookDetailId := c.Params("book_detail_id")
 

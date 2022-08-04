@@ -1,7 +1,7 @@
 package main
 
 import (
-	"library-app/config"
+	"library-app/database"
 	"library-app/router"
 	"log"
 
@@ -16,8 +16,8 @@ func main() {
 	app.Use(cors.New())
 
 	// Config
-	config.InitDatabase()
-	config.InitRedis()
+	database.InitDatabase()
+	database.InitRedis()
 
 	// Router
 	router.SetupRoutes(app)

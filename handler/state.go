@@ -2,14 +2,14 @@ package handler
 
 import (
 	"context"
-	"library-app/config"
+	"library-app/database"
 
 	"github.com/go-redis/redis/v9"
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetStates(c *fiber.Ctx) error {
-	rdb := config.RDB
+	rdb := database.RDB
 
 	states := map[string]string{}
 
@@ -23,7 +23,7 @@ func GetStates(c *fiber.Ctx) error {
 }
 
 func GetStateByKey(c *fiber.Ctx) error {
-	rdb := config.RDB
+	rdb := database.RDB
 
 	bookId := c.Params("book_id")
 

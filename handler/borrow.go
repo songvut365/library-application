@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 	"fmt"
-	"library-app/config"
+	"library-app/database"
 	"library-app/model"
 	"time"
 
@@ -12,8 +12,8 @@ import (
 )
 
 func BorrowBook(c *fiber.Ctx) error {
-	db := config.DB
-	rdb := config.RDB
+	db := database.DB
+	rdb := database.RDB
 
 	input := model.BorrowInput{}
 	c.BodyParser(&input)
@@ -73,7 +73,7 @@ func BorrowBook(c *fiber.Ctx) error {
 }
 
 func GetBorrowList(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	borrowedBooks := []model.BorrowResponse{}
 	db.Model(&model.Borrow{}).

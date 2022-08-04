@@ -2,7 +2,7 @@ package handler
 
 import (
 	"context"
-	"library-app/config"
+	"library-app/database"
 	"library-app/model"
 	"time"
 
@@ -10,7 +10,7 @@ import (
 )
 
 func GetBooks(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	books := []model.BookResponse{}
 	db.Model(&model.Book{}).
@@ -23,7 +23,7 @@ func GetBooks(c *fiber.Ctx) error {
 }
 
 func GetBookById(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	bookId := c.Params("book_id")
 
@@ -43,7 +43,7 @@ func GetBookById(c *fiber.Ctx) error {
 }
 
 func CreateBook(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	var input model.NewBook
 	c.BodyParser(&input)
@@ -76,8 +76,8 @@ func CreateBook(c *fiber.Ctx) error {
 }
 
 func UpdateBook(c *fiber.Ctx) error {
-	db := config.DB
-	rdb := config.RDB
+	db := database.DB
+	rdb := database.RDB
 
 	updateBook := model.UpdateBook{}
 	c.BodyParser(&updateBook)
@@ -106,8 +106,8 @@ func UpdateBook(c *fiber.Ctx) error {
 }
 
 func DeleteBook(c *fiber.Ctx) error {
-	db := config.DB
-	rdb := config.RDB
+	db := database.DB
+	rdb := database.RDB
 
 	updateBook := model.UpdateBook{}
 	c.BodyParser(&updateBook)

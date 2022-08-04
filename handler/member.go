@@ -1,14 +1,14 @@
 package handler
 
 import (
-	"library-app/config"
+	"library-app/database"
 	"library-app/model"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetMembers(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	members := []model.Member{}
 	db.Model(&model.Member{}).Order("id asc").Find(&members)
@@ -17,7 +17,7 @@ func GetMembers(c *fiber.Ctx) error {
 }
 
 func GetMemberById(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	memberId := c.Params("member_id")
 	member := model.Member{}
@@ -32,7 +32,7 @@ func GetMemberById(c *fiber.Ctx) error {
 }
 
 func CreateMember(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	member := model.Member{}
 	c.BodyParser(&member)
@@ -44,7 +44,7 @@ func CreateMember(c *fiber.Ctx) error {
 }
 
 func UpdateMember(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	updateMember := model.Member{}
 	c.BodyParser(&updateMember)
@@ -58,7 +58,7 @@ func UpdateMember(c *fiber.Ctx) error {
 }
 
 func DeleteMember(c *fiber.Ctx) error {
-	db := config.DB
+	db := database.DB
 
 	memberId := c.Params("member_id")
 	member := model.Member{}
