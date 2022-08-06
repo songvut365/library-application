@@ -3,6 +3,7 @@ package database
 import (
 	"library-app/model"
 	"log"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -11,9 +12,10 @@ import (
 var DB *gorm.DB
 
 func InitDatabase() {
-	dsn := "host=localhost user=postgres password=1234 dbname=library port=5432 sslmode=disable TimeZone=Asia/Bangkok"
+	DSN := os.Getenv("POSTGRES_DSN")
+
 	var err error
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(DSN), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
