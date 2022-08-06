@@ -20,9 +20,22 @@ $ docker run --name my-postgres -p 5432:5432 \
 $ docker run --name my-redis -p 6379:6379 -d redis
 ```
 
-3. Run application
+3. Setup `.env` file
+```
+PORT=3000
+POSTGRES_DSN=host=localhost user=postgres password=1234 dbname=library port=5432 sslmode=disable TimeZone=Asia/Bangkok
+REDIS_HOST=localhost
+REDIS_PORT=6379
+```
+
+4. Run application
 ```
 $ go run main.go
 ```
 
 4. Open `frontend/index.html`
+
+## How to run with docker compose
+```
+$ docker compose up
+```
