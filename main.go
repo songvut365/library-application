@@ -24,6 +24,9 @@ func main() {
 	app.Use(logger.New())
 	app.Use(cors.New())
 
+	// Front-end
+	app.Static("/", "./frontend/")
+
 	// Router
 	router.SetupRoutes(app)
 

@@ -35,7 +35,7 @@ REDIS_PORT=6379
 $ go run main.go
 ```
 
-6. Open `frontend/index.html`
+- Open [http://localhost:3000](http://localhost:3000) for frond-end
 
 ## How to run with docker compose
 ```
