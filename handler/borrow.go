@@ -22,7 +22,7 @@ func BorrowBook(c *fiber.Ctx) error {
 	member := model.Member{}
 	err := db.Model(&model.Member{}).Where("national_id = ?", input.NationalID).First(&member).Error
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message": "Member not found",
 		})
 	}
@@ -45,6 +45,7 @@ func BorrowBook(c *fiber.Ctx) error {
 
 	// Check state
 	var message string
+	var status int = fiber.StatusBadRequest
 
 	switch state {
 	case "damaged":
@@ -65,9 +66,12 @@ func BorrowBook(c *fiber.Ctx) error {
 		db.Model(&model.Borrow{}).Create(&borrow)
 
 		message = "Borrow successfully"
+		status = fiber.StatusOK
+	default:
+		message = "Error"
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	return c.Status(status).JSON(fiber.Map{
 		"message": message,
 	})
 }

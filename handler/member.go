@@ -38,7 +38,7 @@ func CreateMember(c *fiber.Ctx) error {
 	c.BodyParser(&member)
 	db.Create(&member)
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"message": "Create member successfully",
 	})
 }
@@ -64,7 +64,7 @@ func DeleteMember(c *fiber.Ctx) error {
 	member := model.Member{}
 	err := db.Model(&model.Member{}).Where("id = ?", memberId).First(&member).Error
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+		return c.Status(fiber.StatusNoContent).JSON(fiber.Map{
 			"message": "Member not found",
 		})
 	}

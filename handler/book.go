@@ -69,7 +69,7 @@ func CreateBook(c *fiber.Ctx) error {
 	bookDetail.Amount = bookDetail.Amount + 1
 	db.Updates(&bookDetail)
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"message": "Create book successfully",
 		"book":    newBook,
 	})
@@ -140,7 +140,7 @@ func DeleteBook(c *fiber.Ctx) error {
 	// Delete from Redis
 	rdb.Del(context.Background(), "book:"+bookId)
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	return c.Status(fiber.StatusNoContent).JSON(fiber.Map{
 		"message": "Delete book successfully",
 		"book":    book,
 	})
